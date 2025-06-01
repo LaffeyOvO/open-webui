@@ -106,7 +106,7 @@
 					messages[idx] = data;
 				}
 			} else if (type === 'typing' && event.message_id === null) {
-				if (event.user.id === $user.id) {
+				if (event.user.id === $user?.id) {
 					return;
 				}
 
@@ -136,13 +136,13 @@
 	};
 
 	const submitHandler = async ({ content, data }) => {
-		if (!content) {
+		if (!content && (data?.files ?? []).length === 0) {
 			return;
 		}
 
 		const res = await sendMessage(localStorage.token, id, { content: content, data: data }).catch(
 			(error) => {
-				toast.error(error);
+				toast.error(`${error}`);
 				return null;
 			}
 		);
@@ -195,11 +195,11 @@
 </script>
 
 <svelte:head>
-	<title>#{channel?.name ?? 'Channel'} | Open WebUI</title>
+	<title>#{channel?.name ?? 'Channel'} • Open WebUI</title>
 </svelte:head>
 
 <div
-	class="h-screen max-h-[100dvh] {$showSidebar
+	class="h-screen max-h-[100dvh] transition-width duration-200 ease-in-out {$showSidebar
 		? 'md:max-w-[calc(100%-260px)]'
 		: ''} w-full max-w-full flex flex-col"
 	id="channel-container"
@@ -262,11 +262,11 @@
 			{#if threadId !== null}
 				<Drawer
 					show={threadId !== null}
-					on:close={() => {
+					onClose={() => {
 						threadId = null;
 					}}
 				>
-					<div class=" {threadId !== null ? ' h-screen  w-screen' : 'px-6 py-4'} h-full">
+					<div class=" {threadId !== null ? ' h-screen  w-full' : 'px-6 py-4'} h-full">
 						<Thread
 							{threadId}
 							{channel}
@@ -281,7 +281,7 @@
 			<PaneResizer
 				class="relative flex w-[3px] items-center justify-center bg-background group bg-gray-50 dark:bg-gray-850"
 			>
-				<div class="z-10 flex h-7 w-5 items-center justify-center rounded-sm">
+				<div class="z-10 flex h-7 w-5 items-center justify-center rounded-xs">
 					<EllipsisVertical className="size-4 invisible group-hover:visible" />
 				</div>
 			</PaneResizer>

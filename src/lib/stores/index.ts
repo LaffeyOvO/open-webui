@@ -11,6 +11,11 @@ export const WEBUI_NAME = writable(APP_NAME);
 export const config: Writable<Config | undefined> = writable(undefined);
 export const user: Writable<SessionUser | undefined> = writable(undefined);
 
+// Electron App
+export const isApp = writable(false);
+export const appInfo = writable(null);
+export const appData = writable(null);
+
 // Frontend
 export const MODEL_DOWNLOAD_POOL = writable({});
 
@@ -36,11 +41,13 @@ export const shortCodesToEmojis = writable(
 	}, {})
 );
 
+export const TTSWorker = writable(null);
+
 export const chatId = writable('');
 export const chatTitle = writable('');
 
 export const channels = writable([]);
-export const chats = writable([]);
+export const chats = writable(null);
 export const pinnedChats = writable([]);
 export const tags = writable([]);
 
@@ -51,11 +58,14 @@ export const knowledge: Writable<null | Document[]> = writable(null);
 export const tools = writable(null);
 export const functions = writable(null);
 
+export const toolServers = writable([]);
+
 export const banners: Writable<Banner[]> = writable([]);
 
 export const settings: Writable<Settings> = writable({});
 
 export const showSidebar = writable(false);
+export const showSearch = writable(false);
 export const showSettings = writable(false);
 export const showArchivedChats = writable(false);
 export const showChangelog = writable(false);
@@ -65,9 +75,14 @@ export const showOverview = writable(false);
 export const showArtifacts = writable(false);
 export const showCallOverlay = writable(false);
 
+export const artifactCode = writable(null);
+
 export const temporaryChatEnabled = writable(false);
 export const scrollPaginationEnabled = writable(false);
 export const currentChatPage = writable(1);
+
+export const isLastActiveTab = writable(true);
+export const playingNotificationSound = writable(false);
 
 export type Model = OpenAIModel | OllamaModel;
 
@@ -129,7 +144,8 @@ type Settings = {
 	notificationEnabled?: boolean;
 	title?: TitleSettings;
 	splitLargeDeltas?: boolean;
-	chatDirection: 'LTR' | 'RTL';
+	chatDirection: 'LTR' | 'RTL' | 'auto';
+	ctrlEnterToSend?: boolean;
 
 	system?: string;
 	requestFormat?: string;
@@ -194,15 +210,22 @@ type Config = {
 		enable_login_form: boolean;
 		enable_web_search?: boolean;
 		enable_google_drive_integration: boolean;
+		enable_onedrive_integration: boolean;
 		enable_image_generation: boolean;
 		enable_admin_export: boolean;
 		enable_admin_chat_access: boolean;
 		enable_community_sharing: boolean;
+		enable_autocomplete_generation: boolean;
+		enable_direct_connections: boolean;
 	};
 	oauth: {
 		providers: {
 			[key: string]: string;
 		};
+	};
+	ui?: {
+		pending_user_overlay_title?: string;
+		pending_user_overlay_description?: string;
 	};
 };
 
